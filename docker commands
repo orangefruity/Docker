@@ -40,6 +40,10 @@ root@multipurpose:/backup_sql# docker inspect -f {{.Mounts}} ec5039031118
 #Mount volume in docker with ro permission
 docker run -it  -v /tmp:/data:ro ubuntu /bin/bash
 
+#To see the stats of the docker container
+docker stats conatiner_id
+CONTAINER ID        NAME                CPU %               MEM USAGE / LIMIT     MEM %               NET I/O             BLOCK I/O           PIDS
+5ff1edf08ba0        packer_app_1        1.21%               39.48MiB / 6.364GiB   0.61%               738B / 0B           0B / 0B             3
 
 
 #How to change the docker logs in debug mode.
@@ -131,9 +135,7 @@ Docker compose
 Compose is a tool for defining and running multi-container Docker applications. With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration.
 
 
-
-
-
+By defaults docker up command will get all in the foreground
 #use docker compose up -d to get the console back
 root@multipurpose:~/Packer# docker-compose up -d
 Starting packer_redis_1
@@ -186,3 +188,6 @@ CONTAINER ID        IMAGE                        COMMAND                  CREATE
 e3ba2e43af56        takacsmark/flask-redis:1.0   "/bin/sh -c 'flask r…"   3 minutes ago       Up 3 minutes        0.0.0.0:5000->5000/tcp   packer_app_1
 1bd1e48f22fe        redis:4.0.11-alpine          "docker-entrypoint.s…"   3 minutes ago       Up 3 minutes        6379/tcp                 packer_redis_1
 root@multipurpose:~/Packer#
+
+we can scale multiple service in single command
+docker-compose scale node1=3 node2=3
