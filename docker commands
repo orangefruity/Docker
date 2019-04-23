@@ -1,0 +1,187 @@
+docker commands
+
+#To rename container
+docker rename nginx nginxcarbob
+
+#Run a container
+docker run -it nginx
+
+#To remove container
+docker rm nginx
+docker rm --force nginx
+
+#To remove all the stopped containers
+docker rm $(docker ps -a -q)
+
+#To remove container with volumne.
+docker rm -v nginx
+
+#Update  the CPU information
+docker update --cpu-shares 256 -m 250M container-id
+
+#Docker logs of the container
+docker logs -f nginx
+
+
+#Docker commits chnages to image
+Do all the changes in the container
+docker commit container_id <image>:<new_tag>
+
+
+#docker inspect information
+docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $INSTANCE_ID
+root@multipurpose:~/Packer# docker inspect  --format '{{.NetworkSettings.IPAddress}}' vigilant_roentgen
+172.17.0.12
+
+#docker inspect the mounts
+root@multipurpose:/backup_sql# docker inspect -f {{.Mounts}} ec5039031118
+[{bind  /backup_sql /tmp   true rprivate}]
+
+
+
+#How to change the docker logs in daemon mode.
+1.stop the docker
+service docker stop
+
+2.Start the daemon process
+dockerd -l debug &
+
+
+docker machine
+
+TO share the file from host machine to docker container.
+docker run -it -v <host_path>: <container_path> <image_name> /bin/bash
+
+
+
+Expose multiple ports
+docker run -d -p 5000/tcp -p 53/udp image-name/id
+
+
+
+#How to create docker volume and share amoung multiple containers.
+
+1. First spina  new container with -v option 
+docker run -it -v /cookbook2 --name data_vol  bc380a0d9076 /bin/bash
+
+/cookbook2 is new folder(dont have to create)
+data_vol is the name of the volume to created
+bc380a0d9076 is the image id
+
+2. TO inspect the volume create in the above command
+root@multipurpose:/backup_sql# docker inspect -f {{.Mounts}} 296bf11809a3
+[{volume 56a2852aeebf889a137b2204bc46f6343ad563793a70ef63bf00b86bd4ac9e65 /var/lib/docker/volumes/56a2852aeebf889a137b2204bc46f6343ad563793a70ef63bf00b86bd4ac9e65/_data /cookbook3 local  true }]
+root@multipurpose:/backup_sql#
+
+
+
+3. Create a new container now using  "--volume-from" option
+docker run -it  --volumes-from data_vol <image_id>  /bin/bash
+
+Notes:
+New container will be create with with /cookbook2
+
+
+#How to copy data from docker container  to docker hosts
+docker cp  cookbook3_volume:/etc/imp .
+docker cp imp  cookbook3_volume:/tmp --from docker hosts to docker volume
+
+
+
+#Dockerfile
+what is the difference between RUN CMD and ENTRYPOINT
+RUN executes command(s) in a new layer and creates a new image. E.g., it is often used for installing software packages.
+example
+RUN apt-get install python3
+
+--shell form
+/bin/sh -c <command>
+example
+ENV name John Dow
+ENTRYPOINT echo "Hello, $name"
+
+--Exec form 
+<instruction> ["executable", "param1", "param2", ...]
+example
+RUN ["apt-get", "install", "python3"]
+CMD ["/bin/echo", "Hello world"]
+ENTRYPOINT ["/bin/echo", "Hello world"]
+
+
+ENTRYPOINT is the program to run the given command. It is used when yo want to run a container as an executable.
+
+
+Difference between ADD and COPY
+That’s because it’s more transparent than ADD. COPY only supports the basic copying of local files into the container, while ADD has some features (like local-only tar extraction and remote URL support) that are not immediately obvious. Consequently, the best use for ADD is local tar file auto-extraction into the image, as in ADD rootfs.tar.xz /.
+
+
+     +------------+  docker build   +--------------+  docker run -dt   +-----------+  docker exec -it   +------+
+    | Dockerfile | --------------> |    Image     | --------------->  | Container | -----------------> | Bash |
+    +------------+                 +--------------+                   +-----------+                    +------+
+                                     ^
+                                     | docker pull
+                                     |
+                                   +--------------+
+                                   |   Registry   |
+                                   +--------------+
+
+
+Docker compose
+Compose is a tool for defining and running multi-container Docker applications. With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration.
+
+
+
+
+
+#use docker compose up -d to get the console back
+root@multipurpose:~/Packer# docker-compose up -d
+Starting packer_redis_1
+Starting packer_app_1
+root@multipurpose:~/Packer#
+root@multipurpose:~/Packer# docker ps
+CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                    NAMES
+b89e05bbc1e8        takacsmark/flask-redis:1.0   "/bin/sh -c 'flask r…"   23 seconds ago      Up 2 seconds        0.0.0.0:5000->5000/tcp   packer_app_1
+5e19bb2a6450        redis:4.0.11-alpine          "docker-entrypoint.s…"   23 seconds ago      Up 2 seconds        6379/tcp                 packer_redis_1
+root@multipurpose:~/Packer#
+
+
+
+root@multipurpose:~/Packer# docker-compose stop
+Stopping packer_app_1 ... done
+Stopping packer_redis_1 ... done
+
+
+root@multipurpose:~/Packer# docker-compose down
+Stopping packer_app_1 ... done
+Stopping packer_redis_1 ... done
+Removing packer_app_1 ... done
+Removing packer_redis_1 ... done
+Removing network packer_default
+root@multipurpose:~/Packer#
+
+
+
+root@multipurpose:~/Packer# docker-compose scale redis=4
+Creating and starting packer_redis_2 ... done
+Creating and starting packer_redis_3 ... done
+Creating and starting packer_redis_4 ... done
+root@multipurpose:~/Packer# docker ps
+CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                    NAMES
+2ac1791ab1c3        redis:4.0.11-alpine          "docker-entrypoint.s…"   5 seconds ago       Up 3 seconds        6379/tcp                 packer_redis_4
+7210d10b911d        redis:4.0.11-alpine          "docker-entrypoint.s…"   5 seconds ago       Up 4 seconds        6379/tcp                 packer_redis_3
+6b0481b7bf84        redis:4.0.11-alpine          "docker-entrypoint.s…"   5 seconds ago       Up 3 seconds        6379/tcp                 packer_redis_2
+e3ba2e43af56        takacsmark/flask-redis:1.0   "/bin/sh -c 'flask r…"   2 minutes ago       Up 2 minutes        0.0.0.0:5000->5000/tcp   packer_app_1
+1bd1e48f22fe        redis:4.0.11-alpine          "docker-entrypoint.s…"   2 minutes ago       Up 2 minutes        6379/tcp                 packer_redis_1
+root@multipurpose:~/Packer#
+
+
+docker scale down
+root@multipurpose:~/Packer# docker-compose scale redis=1
+Stopping and removing packer_redis_2 ... done
+Stopping and removing packer_redis_3 ... done
+Stopping and removing packer_redis_4 ... done
+root@multipurpose:~/Packer# docker ps
+CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                    NAMES
+e3ba2e43af56        takacsmark/flask-redis:1.0   "/bin/sh -c 'flask r…"   3 minutes ago       Up 3 minutes        0.0.0.0:5000->5000/tcp   packer_app_1
+1bd1e48f22fe        redis:4.0.11-alpine          "docker-entrypoint.s…"   3 minutes ago       Up 3 minutes        6379/tcp                 packer_redis_1
+root@multipurpose:~/Packer#
