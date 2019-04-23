@@ -37,9 +37,12 @@ root@multipurpose:~/Packer# docker inspect  --format '{{.NetworkSettings.IPAddre
 root@multipurpose:/backup_sql# docker inspect -f {{.Mounts}} ec5039031118
 [{bind  /backup_sql /tmp   true rprivate}]
 
+#Mount volume in docker with ro permission
+docker run -it  -v /tmp:/data:ro ubuntu /bin/bash
 
 
-#How to change the docker logs in daemon mode.
+
+#How to change the docker logs in debug mode.
 1.stop the docker
 service docker stop
 
@@ -57,11 +60,9 @@ docker run -it -v <host_path>: <container_path> <image_name> /bin/bash
 Expose multiple ports
 docker run -d -p 5000/tcp -p 53/udp image-name/id
 
-
-
 #How to create docker volume and share amoung multiple containers.
 
-1. First spina  new container with -v option 
+1. First spin  new container with -v option 
 docker run -it -v /cookbook2 --name data_vol  bc380a0d9076 /bin/bash
 
 /cookbook2 is new folder(dont have to create)
