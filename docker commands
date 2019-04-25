@@ -60,6 +60,11 @@ TO share the file from host machine to docker container.
 docker run -it -v <host_path>: <container_path> <image_name> /bin/bash
 
 
+ways Building the docker file
+docker build -t automatron .
+docker build -t automatron automatron/
+docker build -t automatron https://github.com/madflojo/automatron.git
+
 
 Expose multiple ports
 docker run -d -p 5000/tcp -p 53/udp image-name/id
