@@ -97,6 +97,35 @@ docker cp  cookbook3_volume:/etc/imp .
 docker cp imp  cookbook3_volume:/tmp --from docker hosts to docker volume
 
 
+#Docker list volumes from all the containers
+for contId in `docker ps -q`; do echo "Container Name: "   `docker ps -f "id=$contId" | awk '{print $NF}' | grep -v NAMES`; echo "Container Volume: " `docker inspect -f '{{.Config.Volumes}}' $contId`; docker inspect -f '{{ json .Mounts }}' $contId  | jq '.[]';   printf "\n"; done
+
+Container Name:  redisclient
+Container Volume:  map[]
+
+Container Name:  redis1
+Container Volume:  map[]
+
+Container Name:  packer_app_1
+Container Volume:  map[]
+
+Container Name:  packer_redis_1
+Container Volume:  map[/data:{}]
+{
+  "Type": "volume",
+  "Name": "1bf8d0750b3052030450b2b5fcab1cd40ef65116f7d0010dc7317d0d03db20a4",
+  "Source": "/var/lib/docker/volumes/1bf8d0750b3052030450b2b5fcab1cd40ef65116f7d0010dc7317d0d03db20a4/_data",
+  "Destination": "/data",
+  "Driver": "local",
+  "Mode": "",
+  "RW": true,
+  "Propagation": ""
+}
+
+
+
+
+
 
 #Dockerfile
 what is the difference between RUN CMD and ENTRYPOINT
@@ -196,3 +225,7 @@ root@multipurpose:~/Packer#
 
 we can scale multiple service in single command
 docker-compose scale node1=3 node2=3
+
+
+
+
