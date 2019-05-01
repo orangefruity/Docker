@@ -26,7 +26,8 @@ docker logs -f nginx
 #Docker commits chnages to image
 Do all the changes in the container
 docker commit container_id <image>:<new_tag>
-
+else
+docker commit -m "What you did to the image" -a "Author Name" container_id repository/new_image_name
 
 #docker inspect information
 docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $INSTANCE_ID
