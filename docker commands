@@ -162,7 +162,10 @@ That’s because it’s more transparent than ADD. COPY only supports the basic 
                                    +--------------+
                                    
 ##Override the ENTRYPOINT at runtime, using docker run
-docker run --entrypoint "/bin/ls -al /root" debian
+docker run --entrypoint "/bin/ls -al /root" debian-- This will create problem
+This command has to convert to 
+docker run --entrypoint "/bin/ls" debian -al /root
+
 
 
 Docker compose
