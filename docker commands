@@ -124,10 +124,6 @@ Container Volume:  map[/data:{}]
 }
 
 
-
-
-
-
 #Dockerfile
 what is the difference between RUN CMD and ENTRYPOINT
 RUN executes command(s) in a new layer and creates a new image. E.g., it is often used for installing software packages.
@@ -164,6 +160,9 @@ That’s because it’s more transparent than ADD. COPY only supports the basic 
                                    +--------------+
                                    |   Registry   |
                                    +--------------+
+                                   
+##Override the ENTRYPOINT at runtime, using docker run
+docker run --entrypoint "/bin/ls -al /root" debian
 
 
 Docker compose
