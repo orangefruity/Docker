@@ -1,0 +1,103 @@
+Docker Notes
+
+#Sharing CPU and Memory
+#How to links containers using --link
+
+
+
+
+
+
+#Setting CPU share 
+The amount of CPU share a container takes up can be controlled using the -c option
+in the docker run command:
+
+docker run -c 10 -it ubuntu /bin/bash
+
+##Setting up the cpu share of the running containers
+
+Yes. Edit the
+file at /sys/fs/cgroup/cpu/docker/<container-id>/cpu.shares and enter the
+priority you want to give it
+
+
+#Setting up the memory limit
+docker run -m <value><optional unit>
+docker run -m 1024m -dit ubuntu /bin/bash
+
+
+
+##How to link containers
+
+We can link both container using --link option,Please find the below procedure
+
+1. Create a nginx container from nginx image
+root@puppetmaster:~# docker run -d --name nginx1 nginx
+0d80cfabe91df100f4a949edb7051a5d008eddd76d9c9433a00e7cc3c036ce01
+
+2.Create a another container with which you would like to attach with first container
+root@puppetmaster:~# docker run -it --link  nginx1:nginx --name ngclinet1 nginx bash
+root@2124ecc17fde:/#
+
+
+
+Syntax
+sourcecontainername::newcontaineralias
+newcontaineralias: can be any string
+
+ngclient1 : check the last line,where 172.17.0.6 is the IP address if nginx1 container
+root@2124ecc17fde:/# cat /etc/hosts
+172.17.0.8      2124ecc17fde
+127.0.0.1       localhost
+::1     localhost ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+172.17.0.6      nginx 0d80cfabe91d nginx1
+
+
+
+
+3.Creating another container 
+root@puppetmaster:~# docker run -it --link nginx1:nginx --name ngclient3 nginx bash
+root@4617a5359b80:/# cat /etc/hosts
+172.17.0.10     4617a5359b80
+127.0.0.1       localhost
+::1     localhost ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+172.17.0.6      nginx 0d80cfabe91d nginx1
+root@4617a5359b80:/#
+
+
+
+
+Here is example of docker-compose which does the same
+version: '2'
+services:
+  webapps:
+    build: .
+    links:
+      - "rabbitmq:rabmq"
+      - "redis"
+
+  rabbitmq:
+    image: rabbitmq
+
+  redis:
+    image: redis
+
+
+
+
+
+
+Reference docker notes
+https://rominirani.com/docker-tutorial-series-a7e6ff90a023
+
+
+
+How to Use device mapper
