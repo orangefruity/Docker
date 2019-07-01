@@ -1,0 +1,6 @@
+Lazydocker is docker monitoring UI,
+
+Steps for installation
+1. extract it
+2. Execute the command lazydocker
+2. It will show the logs,volumes and docker files in simple UI
