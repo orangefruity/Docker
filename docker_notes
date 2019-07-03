@@ -117,7 +117,7 @@ Using ENTRYPOINT
 Same scenario , when you use argument with docker run command  new argument with append to existing entrypoint.
 
 
-USE way to USE CMD and ENTRYPOINT
+BEST way to USE CMD and ENTRYPOINT
 
 In the docker file
 FROM ubuntu:latest
