@@ -102,3 +102,30 @@ on-failure : This restarts  the container  if it fails with non-zero exit code
 always: This will always restart the container without worrying about the exit code
 
 
+
+
+Difference between CMD and ENTRYPOINT
+
+when we use CMD  like below in the dockerfile
+FROM ubunut:latest
+CMD echo "welcome to docker"
+
+when you run the container without any args  whatever message in the dockerfile wrt cmd ,it will be printed as it.
+At the same time when you mention args with docker run command, argument will overwite with CMD metioned in the docker file
+
+Using ENTRYPOINT
+Same scenario , when you use argument with docker run command  new argument with append to existing entrypoint.
+
+
+USE way to USE CMD and ENTRYPOINT
+
+In the docker file
+FROM ubuntu:latest
+ENTRYPOINT ["echo"]
+CMD ["Hi docker"]
+
+when you do docker run, if argument is not mentioned it will print Hi docker,But if the argument is mentioned ,
+argument will override the CMD.
+
+
+
