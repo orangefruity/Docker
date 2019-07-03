@@ -3,11 +3,6 @@ Docker Notes
 #Sharing CPU and Memory
 #How to links containers using --link
 
-
-
-
-
-
 #Setting CPU share 
 The amount of CPU share a container takes up can be controlled using the -c option
 in the docker run command:
@@ -24,7 +19,6 @@ priority you want to give it
 #Setting up the memory limit
 docker run -m <value><optional unit>
 docker run -m 1024m -dit ubuntu /bin/bash
-
 
 
 ##How to link containers
@@ -73,8 +67,6 @@ ff02::2 ip6-allrouters
 root@4617a5359b80:/#
 
 
-
-
 Here is example of docker-compose which does the same
 version: '2'
 services:
@@ -91,13 +83,22 @@ services:
     image: redis
 
 
-
-
-
-
 Reference docker notes
 https://rominirani.com/docker-tutorial-series-a7e6ff90a023
 
 
 
-How to Use device mapper
+#docker search results
+docker search --limit 5 alpine 
+Notes:
+Docker searches for images on the Docker public registry, which has a repository for images at https://index.docker.io/v1/.
+
+#docker restart policy
+docker container run --restart=always -d -i -t ubuntu /bin/bash
+
+There are 3 restar policy 
+no : This does not start container if it dies
+on-failure : This restarts  the container  if it fails with non-zero exit code
+always: This will always restart the container without worrying about the exit code
+
+
