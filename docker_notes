@@ -1,7 +1,12 @@
 Docker Notes
 
-#Sharing CPU and Memory
-#How to links containers using --link
+#Topic
+1	.Sharing CPU and Memory
+2.	How to links containers using --link
+3.	What is the difference between ENTRYPOINT and CMD
+4.	Container hardending/security
+
+
 
 #Setting CPU share 
 The amount of CPU share a container takes up can be controlled using the -c option
@@ -104,7 +109,7 @@ always: This will always restart the container without worrying about the exit c
 
 
 
-Difference between CMD and ENTRYPOINT
+3.Difference between CMD and ENTRYPOINT
 
 when we use CMD  like below in the dockerfile
 FROM ubunut:latest
@@ -126,6 +131,96 @@ CMD ["Hi docker"]
 
 when you do docker run, if argument is not mentioned it will print Hi docker,But if the argument is mentioned ,
 argument will override the CMD.
+
+
+
+
+4. How to make container smaller 
+Images when building from docker file one point to consider is it should be small as possible.
+
+Example most of the docker files are written in the below format
+FROM ubuntu  
+RUN apt-get update && apt-get install vim
+
+Few people write the docker file using below method
+FROM ubuntu  
+RUN apt-get update 
+RUN apt-get install vim
+
+Snce Docker 1.10 the COPY, ADD and RUN statements add a new layer to your image. The last  example created two layers instead of just one.
+
+Note: Layers use space and the more layer you have, the heavier the final image is. 
+
+Example of writing a docker file
+
+FROM node:8
+EXPOSE 3000
+WORKDIR /app COPY package.json index.js ./ 
+RUN npm install CMD [“npm”, “start”]
+
+--contents of index.js
+
+const express = require('express') 
+const app = express()  
+app.get('/', (req, res) => res.send('Hello World!'))  app.listen(3000, () => {   
+console.log(`Example app listening on port 3000!`) 
+})
+
+--contens to package.json
+
+{ “name”: “hello-world”, 
+“version”: “1.0.0”, 
+“main”: “index.js”, 
+“dependencies”: { “express”: “⁴.16.2” },
+ “scripts”: { “start”: “node index.js” } 
+}
+
+Build the image 
+docker build -t node-vanilla .
+
+There is almost 10MB differce when you exeucte both.
+
+
+second method is using distroless.
+
+Example
+
+FROM node:8 as build
+WORKDIR /app
+COPY package.json index.js ./
+RUN npm install
+FROM gcr.io/distroless/nodejs
+COPY --from=build /app /
+EXPOSE 3000
+CMD ["index.js"]
+
+This method is bit secure and lightweight and there is no shell to the container.
+It’s bad news because you can only execute the binaries in the container. The only binary you could run is Node.js:
+
+It’s good news because an attacker exploiting your application and gaining access to the container won’t be able to do as much damage as if were to access a shell.
+
+
+
+Third method
+Smaller base images with Alpine
+
+FROM node:8 as build
+WORKDIR /app
+COPY package.json index.js ./
+RUN npm install
+FROM node:8-alpine
+COPY --from=build /app /
+EXPOSE 3000
+CMD ["npm", "start"]
+
+Reference link:
+
+https://medium.com/engineitops/3-tips-and-tricks-for-smaller-docker-images-570e85c01990
+
+
+
+
+
 
 
 
