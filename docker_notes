@@ -1,10 +1,11 @@
 Docker Notes
 
 #Topic
-1	.Sharing CPU and Memory
+1	  Sharing CPU and Memory
 2.	How to links containers using --link
 3.	What is the difference between ENTRYPOINT and CMD
 4.	Container hardending/security
+5.  Docker networking commands
 
 
 
@@ -217,6 +218,16 @@ Reference link:
 
 https://medium.com/engineitops/3-tips-and-tricks-for-smaller-docker-images-570e85c01990
 
+
+#Docker networking commands
+
+docker network help
+docker network inspect bridge 
+docker network create mynetwork----create a network
+docker network create -d bridge mynetwork2--- d specifies the the network type
+docker network rm mynetwork-- Remove the network 
+docker container run -it --net=mynetwork nginx---connect to a network
+docker container run -it --net=host nginx---for host only network
 
 
 
