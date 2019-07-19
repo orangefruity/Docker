@@ -1,0 +1,68 @@
+
+
+Docker
+
+
+Story of containers
+Solution:
+	- VM approch 
+	- container approch
+
+what is docker and what are advantanges of docker when compared to VMs
+How to developers and Operation works
+Installation of docker.
+Understadaing images,containers and registries
+
+Method to create images
+1. Downloading the images to docker.io
+2. Creating a Docker images.
+
+Usecase: Downloading a image from docker.io
+Explaining the Image attributes
+
+Creating a container from the image using docker pull
+Exiting from the container.
+Understading the docker file
+Building a container from docker file
+
+
+
+
+
+Notes
+
+#Docker containers
+Docker containers are a means to package applications and their dependencies in a standardized way. Docker then coined the phrase—Build, ship and run anywhere
+There are two flavors of Docker to consider: Docker Enterprise Edition, or Docker EE, and Docker Community Edition
+
+
+#Containers vs VMs
+Containers are lightweight,consume less CPU RAM and disk resources 
+standizes packings for software and its dependencies
+provides faster deployment and restart easier migration less overhead
+
+
+#How to developers and Operation works
+Developers can focus on bundling applications and dependencies as containers, without agonizing over underlying hardware/infrastructure
+Administrators/DevOps team can concentrate on managing containers, without agonizing over the contents of those containers.
+
+#Images,containers and registeries 
+
+Images 
+An image is a static representation of the app or service and its configuration and dependencies.
+An image is an instance of a container
+When an image is started, it gives running container of an image.
+A Docker image is built up from a series of layers, allowing a minimal amount of data to be sent when transferring images over network.
+Images are stored in a registry such as docker hub
+
+Containers
+Container is runtime object or representation of an image.
+Containers are lightweight & portable encapsulation of  an environment where applications are run
+
+#Registers
+Images are stored in a registry
+
+
+
+#Downloading a images
+docker run -d -p 801:2368 f3b796dbbc45
