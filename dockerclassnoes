@@ -64,5 +64,29 @@ Images are stored in a registry
 
 
 
-#Downloading a images
-docker run -d -p 801:2368 f3b796dbbc45
+Docker file
+FROM ubuntu:xenial
+RUN apt-get update
+RUN apt-get install -y python python-pip wget
+
+RUN pip install Flask
+ADD hello.py /home/hello.py
+EXPOSE 5000
+WORKDIR /home
+ENTRYPOINT python hello.py
+[root@kworkernode1 ~]#
+
+
+content of hello.py
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def hello_world():
+    return 'Hello World!'
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')
+
+
+
