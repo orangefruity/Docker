@@ -1,64 +1,80 @@
 docker commands
-#Execute the docker as non root users
-sudo groupadd docker
-sudo usermod -aG docker $USER
+=> Execute the docker as non root users
+#sudo groupadd docker
+#sudo usermod -aG docker $USER
 
-#To rename container
-docker rename nginx nginxcarbob
+=> To rename container
+#docker rename <old_name> <new_name>
+#docker rename nginx nginxcarbob
 
-#Run a container
-docker run -it nginx
+=> Run a container
+#docker run -it <image_name>    =>i=interactive t=terminal 
+#docker run -it nginx
 
-#To remove container
-docker rm nginx
-docker rm --force nginx
+=> To remove container
+#docker rm <container_name>
+#docker rm nginx
+#docker rm --force nginx
 
-#To remove all the stopped containers
-docker rm $(docker ps -a -q)
+=> To remove all the stopped containers
+#docker rm $(docker ps -a -q)
 
-#To remove container with volumne.
-docker rm -v nginx
+=> To remove container with volumne.
+#docker rm <-v for volume> <container_name>
+#docker rm -v nginx
 
-#Update  the CPU information
-docker update --cpu-shares 256 -m 250M container-id
+=> To remove docker image
+#docker rmi <image_name>
+#docker rmi nginx
+#docker rmi -f nginx => -f=force
 
-#Docker logs of the container
-docker logs -f nginx
+=> Update  the CPU information
+#docker update --cpu-shares 256 -m 250M container-id
+
+=> Docker logs of the container
+#docker logs -f <container_name>
+#docker logs -f nginx
 
 
-#Docker commits chnages to image
+=> Docker commits chnages to image
 Do all the changes in the container
-docker commit container_id <image>:<new_tag>
+#docker commit container_id <image>:<new_tag>
 else
-docker commit -m "What you did to the image" -a "Author Name" container_id repository/new_image_name
+#docker commit -m "What you did to the image" -a "Author Name" container_id repository/new_image_name
 
-#docker inspect information
-docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $INSTANCE_ID
+
+=> docker inspect volume/network full information
+#docker inspect <network_name>
+#docker inspect <volume_name>
+
+
+=> docker inspect specific information
+#docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $INSTANCE_ID
 root@multipurpose:~/Packer# docker inspect  --format '{{.NetworkSettings.IPAddress}}' vigilant_roentgen
 172.17.0.12
 
-#docker inspect the mounts
+=> docker inspect the mounts information 
 root@multipurpose:/backup_sql# docker inspect -f {{.Mounts}} ec5039031118
 [{bind  /backup_sql /tmp   true rprivate}]
 
-#Mount volume in docker with ro permission
-docker run -it  -v /tmp:/data:ro ubuntu /bin/bash
+=> Mount volume in docker with ro permission
+#docker run -it  -v /tmp:/data:ro ubuntu /bin/bash
 
-#To see the stats of the docker container
-docker stats conatiner_id
+=> To see the stats of the docker container
+#docker stats conatiner_id
 CONTAINER ID        NAME                CPU %               MEM USAGE / LIMIT     MEM %               NET I/O             BLOCK I/O           PIDS
 5ff1edf08ba0        packer_app_1        1.21%               39.48MiB / 6.364GiB   0.61%               738B / 0B           0B / 0B             3
 
 
-#How to change the docker logs in debug mode.
+=> How to change the docker logs in debug mode.
 1.stop the docker
-service docker stop
+#service docker stop
 
 2.Start the daemon process
-dockerd -l debug &
+#dockerd -l debug &
 
-##passsing envirnment variable during docker run
-docker run -d -e "SERVER_NAME=statler" --name=statler fly-nodejs
+=> passsing envirnment variable during docker run
+#docker run -d -e "SERVER_NAME=statler" --name=statler fly-nodejs
 
 docker machine
 
