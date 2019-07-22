@@ -76,29 +76,34 @@ CONTAINER ID        NAME                CPU %               MEM USAGE / LIMIT   
 => passsing envirnment variable during docker run
 #docker run -d -e "SERVER_NAME=statler" --name=statler fly-nodejs
 
-docker machine
+###############   docker machine   ###############
 
-TO share the file from host machine to docker container.
-docker run -it -v <host_path>: <container_path> <image_name> /bin/bash
-
-
-ways Building the docker file
-docker build -t automatron .
-docker build -t automatron automatron/
-docker build -t automatron https://github.com/madflojo/automatron.git
+=> TO share the file from host machine to docker container.
+#docker run -it -v <host_path>: <container_path> <image_name> /bin/bash
 
 
-Expose multiple ports
-docker run -d -p 5000/tcp -p 53/udp image-name/id
+=> ways Building the docker file
+#docker build -t automatron .    => prasent dockerfile directory
+#docker build -t automatron automatron/  => docker file full path
+#docker build -t automatron https://github.com/madflojo/automatron.git  => docker file in gitlab
 
-#How to create docker volume and share amoung multiple containers.
+
+=> Expose port
+#docker run -p <basemachine_port:container_port> image_name/id
+#docker run -ti -p 8888:80 nginx /bin/bash
+
+
+=> Expose multiple ports
+#docker run -d -p 5000/tcp -p 53/udp image-name/id
+
+=> How to create docker volume and share amoung multiple containers.
 
 1. First spin  new container with -v option 
-docker run -it -v /cookbook2 --name data_vol  bc380a0d9076 /bin/bash
+#docker run -it -v /cookbook2 --name data_vol  bc380a0d9076 /bin/bash
 
-/cookbook2 is new folder(dont have to create)
-data_vol is the name of the volume to created
-bc380a0d9076 is the image id
+/cookbook2   => is new folder(dont have to create)
+data_vol is  => the name of the volume to created
+bc380a0d9076 => is the image id
 
 2. TO inspect the volume create in the above command
 root@multipurpose:/backup_sql# docker inspect -f {{.Mounts}} 296bf11809a3
@@ -106,20 +111,19 @@ root@multipurpose:/backup_sql# docker inspect -f {{.Mounts}} 296bf11809a3
 root@multipurpose:/backup_sql#
 
 
-
 3. Create a new container now using  "--volume-from" option
-docker run -it  --volumes-from data_vol <image_id>  /bin/bash
+#docker run -it  --volumes-from data_vol <image_id>  /bin/bash
 
-Notes:
+**Notes:
 New container will be create with with /cookbook2
 
 
-#How to copy data from docker container  to docker hosts
-docker cp  cookbook3_volume:/etc/imp .
-docker cp imp  cookbook3_volume:/tmp --from docker hosts to docker volume
+=> How to copy data from docker container  to docker hosts
+#docker cp  cookbook3_volume:/etc/imp .
+#docker cp imp  cookbook3_volume:/tmp --from docker hosts to docker volume
 
 
-#Docker list volumes from all the containers
+=> Docker list volumes from all the containers
 for contId in `docker ps -q`; do echo "Container Name: "   `docker ps -f "id=$contId" | awk '{print $NF}' | grep -v NAMES`; echo "Container Volume: " `docker inspect -f '{{.Config.Volumes}}' $contId`; docker inspect -f '{{ json .Mounts }}' $contId  | jq '.[]';   printf "\n"; done
 
 Container Name:  redisclient
@@ -145,7 +149,7 @@ Container Volume:  map[/data:{}]
 }
 
 
-#Dockerfile
+##########   Dockerfile   ##########
 what is the difference between RUN CMD and ENTRYPOINT
 RUN executes command(s) in a new layer and creates a new image. E.g., it is often used for installing software packages.
 example
