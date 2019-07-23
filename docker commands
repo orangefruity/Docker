@@ -234,5 +234,74 @@ we can scale multiple service in single command
 docker-compose scale node1=3 node2=3
 
 
+############ Docker Network ############
+
+=> To list of network
+#docker network ls
+
+=> Network full information
+#docker network inspect bridge
+
+=> To display docker network options 
+#docker network --help
+
+=> Create new docker network
+#docker network create < subnetrange> <network_name>
+#docker network create --subnet 172.28.10.0/24 devopstrain
+
+=> Network enable to container
+#docker network connect <network_name> <container_name>
+#docker network connect devopstrain nginx
+
+=> Network disable to container
+#docker network disconnect <network_name> <container_name>
+#docker network disconect  devopstrain nginx
+
+=> Delete network 
+#docker rm <netwirk_name>
+#docker rm bridge
+
+=> Delete the network which are not in use by any containers
+#docker network prune
+
+
+############ Docker Volume ############
+
+
+=> To display docker volume options 
+#docker volume --help
+
+=> To display list of volumes 
+#docker volume <command>
+#docker volume ls
+
+=> To create new volume 
+#docker volume create <volume_name>
+#docker volume create teststorage
+
+=> To check new volume creation path
+#ls -l /var/lib/docker/volume/teststorage
+
+=> To check volume complete info
+#docker volume inspect <volume-name>
+#docker volume inspect teststorage
+
+=> To attach the volume to container 
+#docker run -dti <server-name> <mount_point> <image-name>
+#docker run -dti --name testserver --mount source=teststorage,target=/teststorage nginx:latest
+
+=> To assigen specific permissions
+#docker run -dti <server-name> <mount_point> <permission_type> <image-name>
+#docker run -dti --name testserver --mount source=teststorage,target=/teststorage,readonly nginx:latest
+
+
+
+
+
+
+
+
+
+
 
 
