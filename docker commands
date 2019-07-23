@@ -294,8 +294,8 @@ docker-compose scale node1=3 node2=3
 #docker run -dti <server-name> <mount_point> <permission_type> <image-name>
 #docker run -dti --name testserver --mount source=teststorage,target=/teststorage,readonly nginx:latest
 
-
-
+=> To remove all unused volumes
+#docker volume prune
 
 
 
