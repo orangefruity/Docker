@@ -19,10 +19,6 @@
 => To remove all the stopped containers
 #docker rm $(docker ps -a -q)
 
-=> To remove container with volumne.
-#docker rm <-v for volume> <container_name>
-#docker rm -v nginx
-
 => To remove docker image
 #docker rmi <image_name>
 #docker rmi nginx
@@ -56,6 +52,11 @@ root@multipurpose:/backup_sql# docker inspect -f {{.Mounts}} ec5039031118
 
 => Mount volume in docker with ro permission
 #docker run -it  -v /tmp:/data:ro ubuntu /bin/bash
+
+
+=> To remove container with volumne.
+#docker rm <-v for volume> <container_name>
+#docker rm -v nginx
 
 => To see the stats of the docker container
 #docker stats conatiner_id
