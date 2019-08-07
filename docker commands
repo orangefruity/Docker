@@ -73,6 +73,15 @@ CONTAINER ID        NAME                CPU %               MEM USAGE / LIMIT   
 => passsing envirnment variable during docker run
 #docker run -d -e "SERVER_NAME=statler" --name=statler fly-nodejs
 
+=> copy file from host machine to docker container 
+#docker cp <source_filename> <containerid>:<containerpath:
+#docker cp file1 test:/data
+
+=> copy file from host machine to docker container 
+#docker cp <source-file-path> <container-id>:<destination-path>
+#docker cp testfile e5bd8583a76b:/home/dataiku
+
+
 ###############   docker machine   ###############
 
 => TO share the file from host machine to docker container.
