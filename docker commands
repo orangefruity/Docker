@@ -3,13 +3,16 @@
 #sudo groupadd docker
 #sudo usermod -aG docker $USER
 
+=> Run a container
+#docker run -it <image_name>    =>i=interactive t=terminal 
+#docker run -it nginx
+
 => To rename container
 #docker rename <old_name> <new_name>
 #docker rename nginx nginxcarbob
 
-=> Run a container
-#docker run -it <image_name>    =>i=interactive t=terminal 
-#docker run -it nginx
+=> Mount volume in docker with ro permission (mount host /tmp directory to container /data {automatic create new dir in container) directory)
+#docker run -it  -v /tmp:/data:ro ubuntu /bin/bash
 
 => To remove container
 #docker rm <container_name>
