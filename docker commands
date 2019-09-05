@@ -40,6 +40,9 @@ Do all the changes in the container
 else
 #docker commit -m "What you did to the image" -a "Author Name" container_id repository/new_image_name
 
+=> list of docker networks
+#docker network ls
+
 => docker inspect volume/network full information
 #docker inspect <network_name>
 #docker inspect <volume_name>
