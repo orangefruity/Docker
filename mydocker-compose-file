@@ -1,0 +1,86 @@
+Step 1: Setup
+Define the application dependencies.
+
+==> Create a directory for the project:
+
+$ mkdir composetest
+$ cd composetest
+
+==> Create a file called app.py in your project directory and paste this in:
+
+#vi app.py
+import time
+
+import redis
+from flask import Flask
+
+app = Flask(__name__)
+cache = redis.Redis(host='redis', port=6379)
+
+
+def get_hit_count():
+    retries = 5
+    while True:
+        try:
+            return cache.incr('hits')
+        except redis.exceptions.ConnectionError as exc:
+            if retries == 0:
+                raise exc
+            retries -= 1
+            time.sleep(0.5)
+
+
+@app.route('/')
+def hello():
+    count = get_hit_count()
+    return 'Hello World! I have been seen {} times.\n'.format(count)
+    
+    ### In this example, redis is the hostname of the redis container on the application’s network. We use the default port for Redis, 6379.###
+   
+   ==> Create another file called requirements.txt in your project directory and paste this in:
+    
+    #vim requirements.txt
+     flask
+     redis
+     
+Step 2: Create a Dockerfile
+
+=>In this step, you write a Dockerfile that builds a Docker image. The image contains all the dependencies the Python application requires, including Python itself.
+==> In your project directory, create a file named Dockerfile and paste the following:
+    
+#vim Dockerfile
+FROM python:3.7-alpine
+WORKDIR /code
+ENV FLASK_APP app.py
+ENV FLASK_RUN_HOST 0.0.0.0
+RUN apk add --no-cache gcc musl-dev linux-headers
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
+COPY . .
+CMD ["flask", "run"]
+
+==> This Compose file defines two services: web and redis.
+
+Web service
+===========
+The web service uses an image that’s built from the Dockerfile in the current directory. 
+It then binds the container and the host machine to the exposed port, 5000. 
+This example service uses the default port for the Flask web server, 5000.
+
+Redis service
+============
+The redis service uses a public Redis image pulled from the Docker Hub registry.
+
+Step 4: Build and run your app with Compose
+=============================================
+# sudo curl -L "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)"  -o /usr/local/bin/docker-compose
+# sudo mv /usr/local/bin/docker-compose /usr/bin/docker-compose
+# sudo chmod +x /usr/bin/docker-compose
+# sudo yum -y install python-pip
+# sudo pip install docker-compose
+# docker-compose up
+
+#######output#########
+http://localhost:5000
+######################
+
