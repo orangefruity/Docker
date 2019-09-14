@@ -78,9 +78,22 @@ Step 4: Build and run your app with Compose
 # sudo chmod +x /usr/bin/docker-compose
 # sudo yum -y install python-pip
 # sudo pip install docker-compose
+
+==> creating docker compose file 
+[root@ansible composetest]# vi docker-compose.yml
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+  redis:
+    image: "redis:alpine"
+
 # docker-compose up
 
 #######output#########
 http://localhost:5000
 ######################
 
+more informatiom: https://docs.docker.com/compose/gettingstarted/
