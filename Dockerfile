@@ -13,9 +13,9 @@ RUN sed -i 's/AllowOverride None/AllowOverride ALL/g' /etc/httpd/conf/httpd.conf
 RUN yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm -y
 RUN yum install yum-utils -y
 EXPOSE 80
-ENTRYPOINT ["/usr/sbin/httpd"]
+#ENTRYPOINT ["/usr/sbin/httpd"]
 
-###################### @nd example ##############
+###################### 2nd example ##############
 FROM python:3.7.0-alpine3.8
 
 WORKDIR /usr/src/app
