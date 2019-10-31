@@ -271,7 +271,7 @@ docker-compose scale node1=3 node2=3
 
 => Network disable to container
 #docker network disconnect <network_name> <container_name>
-#docker network disconect  devopstrain nginx
+#docker network disconnect  devopstrain nginx
 
 => Delete network 
 #docker rm <netwirk_name>
