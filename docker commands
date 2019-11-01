@@ -298,7 +298,17 @@ EX: /root/target:/app **
 tmpfs:==> temparely file system ( it is going to create a temparly file syatem on system memory ) this is a very faster this is not a purchitans
           when ever container stopped data wiped
    
+volume:(-v)  syntax: source: destination: mode:
+=======
 
+mount: --mount syntax: type:volume/bind: source: destination: mode=rw,ro
+======
+
+# docker run -d -v myvol:/app --name test nginx
+# docker inspect test
+=> check mount details for test container
+** mode: "z" sharebule for other containers
+** mode: "0" not sharebule for other containers
 
 => To display docker volume options 
 #docker volume --help
