@@ -68,6 +68,51 @@ Note : Update the /etc/hosts file in case DNS server is not configured so that s
  
  [root@docker-repo ~]# firewall-cmd --reload
  
+ Step:2 Create Docker Container Image and upload it to Private  Registry Server 
+ =======
+ 
+ => Let’s assume I have build Ubuntu 16.04 docker container image with Dockerfile on ‘docker.developer.com‘. 
+ In Case you are not familiar with dockerfile then refer the below.
+ 
+ ############# How to build Docker Container Images with Dockerfile #############
+ 
+ => We can upload a container image to the  registry server with “docker push” command but before start uploading it 
+ we have make two changes
+ 
+=>1.Make sure the image name is created with format  “servername:portnumber/imagename:tags“. By default docker pull command
+   will try to upload the image in public registry and if we create image name with format mentioned above then docker pull
+   command will upload it to the server mentioned in the image name. so in my case server name would be “docker-repo.example.com”
+   
+=> To change the name of docker image use docker tag command, example is shown below
+
+[root@developer ~]# docker tag ubuntu:16.04 docker-repo.example.com:5000/ubuntu:16.04 
+
+=>2. Change the docker push https connection to http. Whenever we use ‘docker push’ command it will try to make https connection
+  to the registry server but in case of private registry server setup, it accepts only http connection from the client(dkengine1.example.com)
+  
+  => Edit the file “/usr/lib/systemd/system/docker.service” and change the parameter
+  
+  ExecStart=/usr/bin/dockerd
+
+  to
+
+  ExecStart=/usr/bin/dockerd –insecure-registry docker-repo.example.com:5000
+  
+  => Reload daemon service and restart Docker service
+  
+  [root@developer ~]# systemctl daemon-reload
+  [root@developer ~]# systemctl restart docker
+  
+  => Now upload the image to private registry server using beneath command
+  
+  [root@developer ~]# docker push docker-repo.example.com:5000/ubuntu:16.04
+  
+  
+  
+
+
+ 
+ 
  
                                    
 
