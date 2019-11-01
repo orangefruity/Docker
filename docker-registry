@@ -1,1 +1,35 @@
+Whenever we install Docker on CentOS or RHEL Servers Docker public Registry is enabled so when we run ‘docker pull‘ or 
+‘docker search‘ command it will go to Docker public registry (Docker Hub) and will fetch the required container images. 
+But it is not idea to fetch the Docker container images from public registry when you are using Docker in an organization, 
+for the best practice we should have our own private Docker registry or repository. Docker Registry or repository is a place
+where Docker container images are stored.
+
+################ how to setup our own Docker private registry on CentOS 7.x #################
+
+=> I will be using three CentOS 7.x Servers and assuming docker is already installed and its service is up and running on 
+   all three servers. 
+=> Below are the details of my three servers:
+
+=> docker-repo.example.com {192.168.56.14} -> It will act as my Docker private Registry Server
+
+=> docker.developers.com {192.168.56.29} -> On this Server Docker admins and developers will create their own container
+   images either with dockerfile or with compose and then they will upload these images to their own docker private registry
+   server (docker-repo.example.com) with docker push command
+   
+=> docker.download.com {192.168.56.31} -> On this Server we will download docker container images from our own private 
+  registry server with ‘docker pull‘ command
+
+Note : Update the /etc/hosts file in case DNS server is not configured so that servers can be reachable with their
+       respective hostname or dns name.
+       
+#vim /etc/hosts
+192.168.56.14     docker-repo.example.com docker-repo
+192.168.56.29     docker.developers.com   developers
+192.168.56.31     docker.download.com     download
+
+             
+
+
+
+
 https://www.linuxtechi.com/setup-docker-private-registry-centos-7-rhel-7/
