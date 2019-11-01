@@ -103,10 +103,40 @@ Note : Update the /etc/hosts file in case DNS server is not configured so that s
   [root@developer ~]# systemctl daemon-reload
   [root@developer ~]# systemctl restart docker
   
-  => Now upload the image to private registry server using beneath command
+=> Now upload the image to private registry server using beneath command
   
   [root@developer ~]# docker push docker-repo.example.com:5000/ubuntu:16.04
   
+=>Step:3 Download Docker Container image from Private Registry Server
+
+=> Login  to ‘docker.download.com’ server and use ‘docker pull’ command to download container image from your private registry
+   server. By default docker pull command also makes https connection with registry server but our private registry accepts only 
+   http connection.
+   
+=> Edit the file “/usr/lib/systemd/system/docker.service” and change the parameter
+
+   #vi /usr/lib/systemd/system/docker.service
+
+   ExecStart=/usr/bin/dockerd
+
+  to
+
+   ExecStart=/usr/bin/dockerd –insecure-registry docker-repo.example.com:5000
+   
+=> Reload daemon service and restart docker service
+
+[root@download ~]# systemctl daemon-reload ; systemctl restart docker
+
+=> Now download the Container image using beneath command
+
+   [root@download ~]# docker pull docker-repo.example.com:5000/ubuntu:16.04
+
+=> Now verify the image with ‘docker images‘ command
+
+[root@download ~]# docker images
+
+
+
   
   
 
