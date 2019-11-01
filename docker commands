@@ -283,6 +283,22 @@ docker-compose scale node1=3 node2=3
 
 ############ Docker Volume ############
 
+=> docker provides 2 types of voules they are
+   1. bind mount
+   2. volume mount
+   3. tmpfs (another one)
+=> what is the difference between bind and volume
+
+** if we use the volume mounts the folder or the directory what ever you monting into the container
+   will be stored in a particular location which we called as a docker area ***
+   
+** we create a folder dirctely and mount that into container is called a bint mount
+EX: /root/target:/app **
+
+tmpfs:==> temparely file system ( it is going to create a temparly file syatem on system memory ) this is a very faster this is not a purchitans
+          when ever container stopped data wiped
+   
+
 
 => To display docker volume options 
 #docker volume --help
