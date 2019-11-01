@@ -1,8 +1,8 @@
-Whenever we install Docker on CentOS or RHEL Servers Docker public Registry is enabled so when we run ‘docker pull‘ or 
-‘docker search‘ command it will go to Docker public registry (Docker Hub) and will fetch the required container images. 
-But it is not idea to fetch the Docker container images from public registry when you are using Docker in an organization, 
-for the best practice we should have our own private Docker registry or repository. Docker Registry or repository is a place
-where Docker container images are stored.
+=> Whenever we install Docker on CentOS or RHEL Servers Docker public Registry is enabled so when we run ‘docker pull‘ or 
+   ‘docker search‘ command it will go to Docker public registry (Docker Hub) and will fetch the required container images. 
+   But it is not idea to fetch the Docker container images from public registry when you are using Docker in an organization, 
+   for the best practice we should have our own private Docker registry or repository. Docker Registry or repository is a place
+   where Docker container images are stored.
 
 ################ how to setup our own Docker private registry on CentOS 7.x #################
 
@@ -23,12 +23,12 @@ Note : Update the /etc/hosts file in case DNS server is not configured so that s
        respective hostname or dns name.
        
 #vim /etc/hosts
-192.168.56.14     docker-repo.example.com docker-repo
-192.168.56.29     docker.developers.com   developers
-192.168.56.31     docker.download.com     download
+   192.168.56.14     docker-repo.example.com docker-repo
+   192.168.56.29     docker.developers.com   developers
+   192.168.56.31     docker.download.com     download
 
-      Work Flow Diagram
-      =================
+         Work Flow Diagram
+         =================
      
      -----------------    Image create/modefied   -----------------                   -------------------
      | Developer     |   via dockerfile           |  Docker-repo  |  Docker pull      | docker container|
@@ -37,11 +37,12 @@ Note : Update the /etc/hosts file in case DNS server is not configured so that s
      -----------------                            -----------------                   --------------------
 
 => Step:1 Download and start registry Container on your private registry server
-   Login to the server which you want to configure as Docker Private Registry Server, in my case it is 
+   
+=> Login to the server which you want to configure as Docker Private Registry Server, in my case it is 
    “docker-repo.example.com”.I am assuming Docker package is already installed on it and its service is up and running.
    In case Docker is not installed please refer the below
    
-   #### How to install Docker on CentOS 7 ####
+#### How to install Docker on CentOS 7 ####
    
 => Next task is to start the program or script which will configure and make your server as Registry Server. 
    That Program or script  is started by running a docker registry container. Let’s first download the registry 
@@ -49,56 +50,56 @@ Note : Update the /etc/hosts file in case DNS server is not configured so that s
    
  [root@docker-repo ~]# docker pull registry      
  
- => Once the image is downloaded verify which commands will be executed when we start registry container image.
+=> Once the image is downloaded verify which commands will be executed when we start registry container image.
  
- [root@docker-repo ~]# docker history registry
+   [root@docker-repo ~]# docker history registry
  
- => Now start the registry container using below command
+=> Now start the registry container using below command
  
- [root@docker-repo ~]# docker run -dit -p 5000:5000 --name registry registry
+   [root@docker-repo ~]# docker run -dit -p 5000:5000 --name registry registry
  
- => Above Command will start the registry container with name registry and also we set the patting rule so that if any 
+=> Above Command will start the registry container with name registry and also we set the patting rule so that if any 
     request comes to ‘docker-repo.example.com‘ on 5000 port then request will be redirected to registry container on 5000 port.
  
- [root@docker-repo ~]# docker ps
+    [root@docker-repo ~]# docker ps
  
- Note: In case firewall is enabled on your private registry server then open 80 port using the following command
+Note: In case firewall is enabled on your private registry server then open 80 port using the following command
  
- [root@docker-repo ~]# firewall-cmd --permanent --add-port=80/tcp
+     [root@docker-repo ~]# firewall-cmd --permanent --add-port=80/tcp
  
- [root@docker-repo ~]# firewall-cmd --reload
+     [root@docker-repo ~]# firewall-cmd --reload
  
- Step:2 Create Docker Container Image and upload it to Private  Registry Server 
- =======
+Step:2 Create Docker Container Image and upload it to Private  Registry Server 
+=======
  
- => Let’s assume I have build Ubuntu 16.04 docker container image with Dockerfile on ‘docker.developer.com‘. 
+=> Let’s assume I have build Ubuntu 16.04 docker container image with Dockerfile on ‘docker.developer.com‘. 
  In Case you are not familiar with dockerfile then refer the below.
  
  ############# How to build Docker Container Images with Dockerfile #############
  
- => We can upload a container image to the  registry server with “docker push” command but before start uploading it 
- we have make two changes
+=> We can upload a container image to the  registry server with “docker push” command but before start uploading it 
+   we have make two changes
  
-=>1.Make sure the image name is created with format  “servername:portnumber/imagename:tags“. By default docker pull command
-   will try to upload the image in public registry and if we create image name with format mentioned above then docker pull
-   command will upload it to the server mentioned in the image name. so in my case server name would be “docker-repo.example.com”
+=>1. Make sure the image name is created with format  “servername:portnumber/imagename:tags“. By default docker pull command
+     will try to upload the image in public registry and if we create image name with format mentioned above then docker pull
+     command will upload it to the server mentioned in the image name. so in my case server name would be “docker-repo.example.com”
    
 => To change the name of docker image use docker tag command, example is shown below
 
-[root@developer ~]# docker tag ubuntu:16.04 docker-repo.example.com:5000/ubuntu:16.04 
+   [root@developer ~]# docker tag ubuntu:16.04 docker-repo.example.com:5000/ubuntu:16.04 
 
 =>2. Change the docker push https connection to http. Whenever we use ‘docker push’ command it will try to make https connection
   to the registry server but in case of private registry server setup, it accepts only http connection from the client(dkengine1.example.com)
   
-  => Edit the file “/usr/lib/systemd/system/docker.service” and change the parameter
+=> Edit the file “/usr/lib/systemd/system/docker.service” and change the parameter
   
-  ExecStart=/usr/bin/dockerd
+   ExecStart=/usr/bin/dockerd
 
-  to
+   to
 
-  ExecStart=/usr/bin/dockerd –insecure-registry docker-repo.example.com:5000
+   ExecStart=/usr/bin/dockerd –insecure-registry docker-repo.example.com:5000
   
-  => Reload daemon service and restart Docker service
+=> Reload daemon service and restart Docker service
   
   [root@developer ~]# systemctl daemon-reload
   [root@developer ~]# systemctl restart docker
@@ -125,7 +126,7 @@ Note : Update the /etc/hosts file in case DNS server is not configured so that s
    
 => Reload daemon service and restart docker service
 
-[root@download ~]# systemctl daemon-reload ; systemctl restart docker
+   [root@download ~]# systemctl daemon-reload ; systemctl restart docker
 
 => Now download the Container image using beneath command
 
