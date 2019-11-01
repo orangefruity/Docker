@@ -30,11 +30,11 @@ Note : Update the /etc/hosts file in case DNS server is not configured so that s
          Work Flow Diagram
          =================
      
-     -----------------    Image create/modefied   -----------------                   -------------------
+     +---------------+    Image create/modefied   +---------------+                   +-----------------+
      | Developer     |   via dockerfile           |  Docker-repo  |  Docker pull      | docker container|
      |               |=========================>  |  Server       |=================> |image downloaded |
      |   server      |                            |               |                   |by other team    |
-     -----------------                            -----------------                   --------------------
+     +---------------+                            +---------------+                   +-----------------+
 
 => Step:1 Download and start registry Container on your private registry server
    
