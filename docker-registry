@@ -28,11 +28,15 @@ Note : Update the /etc/hosts file in case DNS server is not configured so that s
 192.168.56.31     docker.download.com     download
 
       Work Flow Diagram
-      
-                                     -----------------
-                                     |               |
-                                     | docker-repo   |
-                                     -----------------
+      =================
+     
+     -----------------    Image create/modefied   -----------------                   -------------------
+     | Developer     |   via dockerfile           |  Docker-repo  |  Docker pull      | docker container|
+     |               |=========================>  |  Server       |=================> |image downloaded |
+     |   server      |                            |               |                   |by other team    |
+     -----------------                            -----------------                   --------------------
+                                   
+                                   
                                    
 
 
