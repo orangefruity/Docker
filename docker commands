@@ -252,6 +252,12 @@ docker-compose scale node1=3 node2=3
 
 ############ Docker Network ############
 
+=> type of netwirks
+  -> Bridge (bridge is used to provide network connectvity to containers in the same host)
+  -> host (host is to make sure that providing host network to the container the container directly participent in host n/w)
+  -> macvlan ( macvlan it will be assign different macaddres to the container and directly participating on the physical n/w) 
+  -> overlay (used in- swarm- (which in provide network connectivity in multipule docker enginees)
+
 => To list of network
 #docker network ls
 
@@ -297,6 +303,9 @@ EX: /root/target:/app **
 
 tmpfs:==> temparely file system ( it is going to create a temparly file syatem on system memory ) this is a very faster this is not a purchitans
           when ever container stopped data wiped
+Example:# docker run -d --tmpfs /app --name nginx nginx
+
+example2: #docker run -d -it --name devtest --mount type=tmpfs,tmpfs=4096,dest=/app nginx
    
 volume:(-v)  syntax: source: destination: mode:
 =======
