@@ -16,6 +16,30 @@ EXPOSE 80
 #ENTRYPOINT ["/usr/sbin/httpd"]
 
 ###################### 2nd example ##############
+# Use an official python runtime as a parent image
+FROM python:2.7-slim
+
+# Set the working directory to /app
+WORKDIR /app
+
+# Copy the content directory contents into the container at /app
+COPY . /app
+
+# Install any needed packages specified in requirements.txt
+RUN pip install --trusted-host pypi.python.org -r requirementd.txt
+
+# Make part 80 available to the world outside this container
+EXPOSE 80
+
+# Define environment variable
+ENV NAME world
+ENV NAME1 world1
+
+#Run app.py when the container lanches
+CMD ("python", "app.py")
+
+
+###################### 3rd example ##############
 FROM python:3.7.0-alpine3.8
 
 WORKDIR /usr/src/app
