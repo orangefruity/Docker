@@ -1,0 +1,54 @@
+1. what is K8s vs.Docker?
+=> Docker provides an open standard for packaging and distributing containerized applications. Using Docker,You can build 
+   and run containers, and store and share container images.
+   
+=> Kubernetes orchestrates and manages the distributed, Containerized application that docker creates. It also provides the 
+   infrastructure needed to deploy and run those applications on a cluster of machines.
+   
+2. What is a Kubernetes deployment?
+=> A Kubernetes deployment allows you to describe your desired application deployment state. k8s scheduler ensures the actual 
+   state matches your desired state and maintains that state in the event one or more pods crash. K8s deployments also allow 
+   you to consistently upgrade your applications without downtime
+   
+NOTE:(more info) https://info.microsoft.com/ww-OnDemandRegistration-successful-kubernetes-applications-webinar.html 
+
+3. How do i deploy to K8s using DevOps practices?
+=> Deployment to k8s using DevOps typically involves a respository such as Git for management. The repository servers 
+   as the beginning of the CI/CD line. Depending on the appoarch you use,    changes in the repository trigger integration,
+   build, delivery and deployment activities.
+   
+NOTE: See how AKS works with Azure DevOps in detail 
+      (https://cloudblogs.microsoft.com/opensource/2018/11/27/tutorial-azure-devops-setup-cicd-pipeline-kubernetes-docker-helm/)
+ 
+4. What are some common use cases for Kubernetes?
+=> K8s is useful in scenarios ranging from moving applications to the cloud to simplifying challenges in machine learning and AI.
+
+==> Key use cases include:
+
+    A. Migrating existing applications to the cloud
+      (https://azure.microsoft.com/en-in/solutions/architecture/migrate-existing-applications-with-aks/)
+    
+    B. Simplifying deployment and management of microservices-based applications
+       (https://azure.microsoft.com/en-in/solutions/architecture/microservices-with-aks/)
+       
+    C. Scaling with ease
+       (https://azure.microsoft.com/en-in/solutions/architecture/scale-using-aks-with-aci/)
+       
+    D. IoT device deployment and management
+       (https://azure.microsoft.com/en-in/solutions/architecture/iot-with-aks/)
+       
+    E. Machine learning
+       (https://azure.microsoft.com/en-in/solutions/architecture/machine-learning-with-aks/)
+       
+5. What are K8s best practices?
+=> See "best practices" and "architectural patterns" created by the thousands of technical professionals and partners who use Azure.
+
+  NOTE: "best practices": (https://docs.microsoft.com/en-us/azure/aks/best-practices)
+  
+  NOTE: "architectural patterns": (https://docs.microsoft.com/en-us/azure/architecture/reference-architectures/microservices/aks)
+  
+  6. Where should i start?
+  => Follow this curated journey to begin learning Kubernetes. 
+  NOTE: (https://azure.microsoft.com/en-in/overview/kubernetes-getting-started/)
+
+  
