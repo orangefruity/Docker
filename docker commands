@@ -61,6 +61,9 @@
 #docker logs -f <container_name>
 #docker logs -f nginx
 
+=> Expose multiple ports
+docker run -d -p 5000/tcp -p 53/udp image-name/id
+
 => Docker commits chnages to image
 Do all the changes in the container
 #docker commit container_id <image>:<new_tag>
@@ -134,7 +137,38 @@ root@multipurpose:~/Packer# docker inspect  --format '{{.NetworkSettings.IPAddre
 #docker volume inspect <volume-name>
 #docker volume inspect teststorage
 
-=>First spin  new container with -v option 
+=> remove a volume
+# docker volume rm teststorage
+
+=> create a container with volume
+#docker run -d -it --name web-host -v myvol2:/data ubuntu:14.04 
+
+////Notes 
+Myvol2 : is created on the host id doenot exist
+/data : is created in container if does not exist 
+
+=> Login to container and create a new file
+#docker exec -it web-host /bin/bash
+
+=>create new file in the /data directory and exit container
+#touch data/bhadra.txt
+#ls data/
+ exit
+ 
+=> validate if file is there on your existing host file system
+# ls -l /var/lib/docker/volumes/myvol2/_data
+
+=>remove the web-host container and create a new container   
+#docker  rm -f web-host
+#docker run -d -it --name new-host -v myvol2:/data ubuntu:14.04
+
+=> login to container and touch a file
+#docker exec -it new-host ls -l /data
+
+========================================== More commands =========================
+
+=>First spin  new container with -v option
+#docker run -ti -v <container-dir-path> --name  <container-name> <imageid> <shell>
 #docker run -it -v /cookbook2 --name teststorage bc380a0d9076 /bin/bash
 
 /cookbook2 is new folder(dont have to create)
