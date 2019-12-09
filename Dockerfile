@@ -1,3 +1,80 @@
+==>Sample project for Docker file
+
+=> create a new directory
+#mkdir project1
+
+=>Go to project directory
+#cd project1
+
+=> create a docker file here 
+#vi Dockerfile
+#Set the image to ubuntu
+FROM ubuntu:14.04
+
+#Update the repository sources list
+RUN apt-get update
+
+######### BEGIN INSTALLATION ##################
+#install openjdk
+RUN apt-get install -y default-jdk
+
+#install git and maven
+RUN apt-get install -y git maven
+
+#Create the default data directory
+RUN mkdir -p /data/
+
+#switch to new diectory
+WORKDIR /data
+
+#perform git clone
+RUN git clone https://github.com/anilbidari/CloudenabledWebApp.git
+
+
+#switch to cloudenabledwebapp directory
+WORKDIR /data/CloudenabledWebApp
+
+#use maven package
+RUN mvn package
+
+#install tomcat7
+RUN apt-get install -y tomcat7
+
+#switch to cloudenabledwebapp directory
+WORKDIR /data/CloudenabledWebApp/target/
+
+#copy war file
+RUN cp /data/CloudenabledWebApp/target/CloudenabledWebApp.war /var/lib/tomcat7/webapps
+
+#Expose the default port
+EXPOSE 8080
+
+#Default port to execute the entrypoint
+CMD ["--port 8080"]
+
+#Set default container command
+ENTRYPOINT /bin/bash
+
+
+############ INSTALLATION END ######################
+
+=>Build new image
+#docker build -t my-webapp .
+
+=>checking image status
+# docker images
+
+=> now run the new container using my-webapp images and port forwording
+#docker run -itd --name web-host -p 5004:8080 my-webapp
+
+=> Now starts the tomcat service
+#docker exec -it web-host service tomcat7 start
+
+=> checking output
+   url= 52.15.60.226:5004/CloudenabledWebApp
+
+
+##################################################MORE EXAMPLES #############################################
 [root@ip-172-31-31-116 abc]# cat Dockerfile
 FROM centos:6.9
 RUN yum install java -y
