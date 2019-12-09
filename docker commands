@@ -3,16 +3,43 @@
 #sudo groupadd docker
 #sudo usermod -aG docker $USER
 
+=> install epel-repos
+#yum install epel-release
+
+=> Docker installation
+#yum install docker -y
+
+=> Checking docker service status 
+#systemctl status docker
+
+=> start to docker service
+#systemctl start docker
+
+=> checking docker version
+#docker --version
+
+=> Search specific operating system images
+#docker search centos
+
+=> Pull the the centos image 
+#docker pull centos:6.9  (centos=repositry name 6.9=tag)
+
+=> List of docker images in your current operating system
+#docker images
+
 => Run a container
 #docker run -it <image_name>    =>i=interactive t=terminal 
 #docker run -it nginx
 
+=> list of running containers
+#docker ps
+
+=> list of all container
+#docker ps -a
+
 => To rename container
 #docker rename <old_name> <new_name>
 #docker rename nginx nginxcarbob
-
-=> Mount volume in docker with ro permission (mount host /tmp directory to container /data {automatic create new dir in container) directory)
-#docker run -it  -v /tmp:/data:ro ubuntu /bin/bash
 
 => To remove container
 #docker rm <container_name>
@@ -40,17 +67,115 @@ Do all the changes in the container
 else
 #docker commit -m "What you did to the image" -a "Author Name" container_id repository/new_image_name
 
+=> To see the stats of the docker container
+#docker stats conatiner_id
+CONTAINER ID        NAME                CPU %               MEM USAGE / LIMIT     MEM %               NET I/O             BLOCK I/O           PIDS
+5ff1edf08ba0        packer_app_1        1.21%               39.48MiB / 6.364GiB   0.61%               738B / 0B           0B / 0B             3
 
-=> docker inspect volume/network full information
+
+############ Docker Network ############
+
+=> type of netwirks
+  -> Bridge (bridge is used to provide network connectvity to containers in the same host)
+  -> host (host is to make sure that providing host network to the container the container directly participent in host n/w)
+  -> macvlan ( macvlan it will be assign different macaddres to the container and directly participating on the physical n/w) 
+  -> overlay (used in- swarm- (which in provide network connectivity in multipule docker enginees)
+
+=> To list of network
 #docker network ls
-#docker inspect <network_name>
-#docker volume ls
-#docker inspect <volume_name>
+
+=> Network full information
+#docker network inspect bridge
+
+=> To display docker network options 
+#docker network --help
+
+=> Create new docker network
+#docker network create < subnetrange> <network_name>
+#docker network create --subnet 172.28.10.0/24 devopstrain
+
+=> Network enable to container
+#docker network connect <network_name> <container_name>
+#docker network connect devopstrain nginx
+
+=> Network disable to container
+#docker network disconnect <network_name> <container_name>
+#docker network disconnect  devopstrain nginx
+
+=> Delete network 
+#docker rm <netwirk_name>
+#docker rm bridge
+
+=> Delete the network which are not in use by any containers
+#docker network prune
 
 => docker inspect specific information
 #docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $INSTANCE_ID
 root@multipurpose:~/Packer# docker inspect  --format '{{.NetworkSettings.IPAddress}}' vigilant_roentgen
 172.17.0.12
+
+############ Docker Volume ############
+
+=> To display docker volume options 
+#docker volume --help
+
+=> To display list of volumes 
+#docker volume <command>
+#docker volume ls
+
+=> To create new volume 
+#docker volume create <volume_name>
+#docker volume create teststorage
+
+=> To check new volume creation path
+#ls -l /var/lib/docker/volume/teststorage/_data
+
+=> To check volume complete info
+#docker volume inspect <volume-name>
+#docker volume inspect teststorage
+
+=> To attach the volume to container 
+#docker run -dti <server-name> <mount_point> <image-name>
+#docker run -dti --name testserver --mount source=teststorage,target=/teststorage nginx:latest
+
+
+=> To assigen specific permissions
+#docker run -dti <server-name> <mount_point> <permission_type> <image-name>
+#docker run -dti --name testserver --mount source=teststorage,target=/teststorage,readonly nginx:latest
+
+=> To remove all unused volumes
+#docker volume prune
+
+
+=> docker provides 2 types of voules they are
+   1. bind mount
+   2. volume mount
+   3. tmpfs (another one)
+=> what is the difference between bind and volume
+
+** if we use the volume mounts the folder or the directory what ever you monting into the container
+   will be stored in a particular location which we called as a docker area ***
+   
+** we create a folder dirctely and mount that into container is called a bint mount
+EX: /root/target:/app **
+
+tmpfs:==> temparely file system ( it is going to create a temparly file syatem on system memory ) this is a very faster this is not a purchitans
+          when ever container stopped data wiped
+Example:# docker run -d --tmpfs /app --name nginx nginx
+
+example2: #docker run -d -it --name devtest --mount type=tmpfs,tmpfs=4096,dest=/app nginx
+   
+volume:(-v)  syntax: source: destination: mode:
+=======
+
+mount: --mount syntax: type:volume/bind: source: destination: mode=rw,ro
+======
+
+# docker run -d -v myvol:/app --name test nginx
+# docker inspect test
+=> check mount details for test container
+** mode: "z" sharebule for other containers
+** mode: "0" not sharebule for other containers
 
 => docker inspect the mounts information 
 root@multipurpose:/backup_sql# docker inspect -f {{.Mounts}} ec5039031118
@@ -59,15 +184,6 @@ root@multipurpose:/backup_sql# docker inspect -f {{.Mounts}} ec5039031118
 => Mount volume in docker with ro permission
 #docker run -it  -v /tmp:/data:ro ubuntu /bin/bash
 
-
-=> To remove container with volumne.
-#docker rm <-v for volume> <container_name>
-#docker rm -v nginx
-
-=> To see the stats of the docker container
-#docker stats conatiner_id
-CONTAINER ID        NAME                CPU %               MEM USAGE / LIMIT     MEM %               NET I/O             BLOCK I/O           PIDS
-5ff1edf08ba0        packer_app_1        1.21%               39.48MiB / 6.364GiB   0.61%               738B / 0B           0B / 0B             3
 
 => How to change the docker logs in debug mode.
 1.stop the docker
@@ -250,103 +366,9 @@ we can scale multiple service in single command
 docker-compose scale node1=3 node2=3
 
 
-############ Docker Network ############
-
-=> type of netwirks
-  -> Bridge (bridge is used to provide network connectvity to containers in the same host)
-  -> host (host is to make sure that providing host network to the container the container directly participent in host n/w)
-  -> macvlan ( macvlan it will be assign different macaddres to the container and directly participating on the physical n/w) 
-  -> overlay (used in- swarm- (which in provide network connectivity in multipule docker enginees)
-
-=> To list of network
-#docker network ls
-
-=> Network full information
-#docker network inspect bridge
-
-=> To display docker network options 
-#docker network --help
-
-=> Create new docker network
-#docker network create < subnetrange> <network_name>
-#docker network create --subnet 172.28.10.0/24 devopstrain
-
-=> Network enable to container
-#docker network connect <network_name> <container_name>
-#docker network connect devopstrain nginx
-
-=> Network disable to container
-#docker network disconnect <network_name> <container_name>
-#docker network disconnect  devopstrain nginx
-
-=> Delete network 
-#docker rm <netwirk_name>
-#docker rm bridge
-
-=> Delete the network which are not in use by any containers
-#docker network prune
 
 
-############ Docker Volume ############
 
-=> docker provides 2 types of voules they are
-   1. bind mount
-   2. volume mount
-   3. tmpfs (another one)
-=> what is the difference between bind and volume
-
-** if we use the volume mounts the folder or the directory what ever you monting into the container
-   will be stored in a particular location which we called as a docker area ***
-   
-** we create a folder dirctely and mount that into container is called a bint mount
-EX: /root/target:/app **
-
-tmpfs:==> temparely file system ( it is going to create a temparly file syatem on system memory ) this is a very faster this is not a purchitans
-          when ever container stopped data wiped
-Example:# docker run -d --tmpfs /app --name nginx nginx
-
-example2: #docker run -d -it --name devtest --mount type=tmpfs,tmpfs=4096,dest=/app nginx
-   
-volume:(-v)  syntax: source: destination: mode:
-=======
-
-mount: --mount syntax: type:volume/bind: source: destination: mode=rw,ro
-======
-
-# docker run -d -v myvol:/app --name test nginx
-# docker inspect test
-=> check mount details for test container
-** mode: "z" sharebule for other containers
-** mode: "0" not sharebule for other containers
-
-=> To display docker volume options 
-#docker volume --help
-
-=> To display list of volumes 
-#docker volume <command>
-#docker volume ls
-
-=> To create new volume 
-#docker volume create <volume_name>
-#docker volume create teststorage
-
-=> To check new volume creation path
-#ls -l /var/lib/docker/volume/teststorage
-
-=> To check volume complete info
-#docker volume inspect <volume-name>
-#docker volume inspect teststorage
-
-=> To attach the volume to container 
-#docker run -dti <server-name> <mount_point> <image-name>
-#docker run -dti --name testserver --mount source=teststorage,target=/teststorage nginx:latest
-
-=> To assigen specific permissions
-#docker run -dti <server-name> <mount_point> <permission_type> <image-name>
-#docker run -dti --name testserver --mount source=teststorage,target=/teststorage,readonly nginx:latest
-
-=> To remove all unused volumes
-#docker volume prune
 
 
 
