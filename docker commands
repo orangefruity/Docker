@@ -134,14 +134,18 @@ root@multipurpose:~/Packer# docker inspect  --format '{{.NetworkSettings.IPAddre
 #docker volume inspect <volume-name>
 #docker volume inspect teststorage
 
-=> To attach the volume to container 
-#docker run -dti <server-name> <mount_point> <image-name>
-#docker run -dti --name testserver --mount source=teststorage,target=/teststorage nginx:latest
+=>First spin  new container with -v option 
+#docker run -it -v /cookbook2 --name teststorage bc380a0d9076 /bin/bash
 
+/cookbook2 is new folder(dont have to create)
+data_vol is the name of the volume to created
+bc380a0d9076 is the image id
 
-=> To assigen specific permissions
-#docker run -dti <server-name> <mount_point> <permission_type> <image-name>
-#docker run -dti --name testserver --mount source=teststorage,target=/teststorage,readonly nginx:latest
+=>create new container attach existing volume
+# docker run -it --volumes-from teststorage centos /bin/bash
+
+=>Mount volume in docker with ro permission
+#docker run -it  -v /tmp:/data:ro ubuntu /bin/bash
 
 => To remove all unused volumes
 #docker volume prune
@@ -183,6 +187,8 @@ root@multipurpose:/backup_sql# docker inspect -f {{.Mounts}} ec5039031118
 
 => Mount volume in docker with ro permission
 #docker run -it  -v /tmp:/data:ro ubuntu /bin/bash
+
+
 
 
 => How to change the docker logs in debug mode.
@@ -364,6 +370,16 @@ root@multipurpose:~/Packer#
 
 we can scale multiple service in single command
 docker-compose scale node1=3 node2=3
+
+=> To attach the volume to container 
+#docker run -dti <server-name> <mount_point> <image-name>
+#docker run -dti --name testserver --mount source=teststorage,target=/teststorage nginx:latest
+
+
+=> To assigen specific permissions
+#docker run -dti <server-name> <mount_point> <permission_type> <image-name>
+#docker run -dti --name testserver --mount source=teststorage,target=/teststorage,readonly nginx:latest
+
 
 
 
