@@ -165,6 +165,9 @@ Myvol2 : is created on the host id doenot exist
 => login to container and touch a file
 #docker exec -it new-host ls -l /data
 
+=> To remove all unused volumes
+#docker volume prune
+
 ========================================== More commands =========================
 
 =>First spin  new container with -v option
@@ -180,9 +183,6 @@ bc380a0d9076 is the image id
 
 =>Mount volume in docker with ro permission
 #docker run -it  -v /tmp:/data:ro ubuntu /bin/bash
-
-=> To remove all unused volumes
-#docker volume prune
 
 
 => docker provides 2 types of voules they are
